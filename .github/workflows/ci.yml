@@ -105,6 +105,7 @@ jobs:
           repository: ${{ steps.determine.outputs.repo }}
 
       - name: Upload to ChRIS Store
+        if: "!endsWith(steps.determine.outputs.dock_image, ':latest')"
         uses: FNNDSC/chrisstore-action@master
         with:
           descriptor_file: /tmp/description.json
