@@ -1,5 +1,9 @@
 # pl-nii2mnc-u8
 
+[![Version](https://img.shields.io/docker/v/fnndsc/pl-nii2mnc-u8?sort=semver)](https://hub.docker.com/r/fnndsc/pl-nii2mnc-u8)
+[![MIT License](https://img.shields.io/github/license/fnndsc/pl-nii2mnc-u8)](https://github.com/FNNDSC/pl-nii2mnc-u8/blob/main/LICENSE)
+[![Build](https://github.com/FNNDSC/pl-nii2mnc-u8/actions/workflows/ci.yml/badge.svg)](https://github.com/FNNDSC/pl-nii2mnc-u8/actions)
+
 `pl-nii2mnc-u8` is a _ChRIS_ _ds_ plugin wrapper around
 [`nii2mnc`](http://bic-mni.github.io/man-pages/man/nii2mnc.html)
 with hard-coded options `-unsigned -byte`.
