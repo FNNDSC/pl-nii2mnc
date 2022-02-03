@@ -90,11 +90,9 @@ jobs:
         run: |
           repo=${{ steps.determine.outputs.repo }}
           dock_image=${{ steps.determine.outputs.dock_image }}
-          json="$(docker run --rm localhost:5000/$dock_image chris_plugin_info)"
-          jq <<< "$json"  # pretty print in log
-
-          echo "::set-output name=json::$json"
-          echo "::set-output name=title::$(jq -r '.title' <<< "$json")"
+          docker run --rm localhost:5000/$dock_image chris_plugin_info > /tmp/description.json
+          jq < /tmp/description.json  # pretty print in log
+          echo "::set-output name=title::$(jq -r '.title' < /tmp/description.json)"
 
       - name: Update DockerHub description
         uses: peter-evans/dockerhub-description@v2
@@ -107,31 +105,7 @@ jobs:
           repository: ${{ steps.determine.outputs.repo }}
 
       - name: Upload to ChRIS Store
-        if: "!endsWith(steps.determine.outputs.dock_image, ':latest')"
-        run: |
-          dock_image=${{ steps.determine.outputs.dock_image }}
-          plname="$(sed 's/^.*\///' <<< $GITHUB_REPOSITORY)" && echo "name=$plname"
-          descriptor_file=$(mktemp --suffix .json)
-          cat > $descriptor_file << ENDOFPLUGINJSONDESCRIPTION
-          ${{ steps.pluginmeta.outputs.json }}
-          ENDOFPLUGINJSONDESCRIPTION
-          res=$(
-            curl -s -u "${{ secrets.CHRIS_STORE_USER }}" "https://chrisstore.co/api/v1/plugins/" \
-              -H 'Accept:application/vnd.collection+json' \
-              -F "name=$plname" \
-              -F "dock_image=$dock_image"  \
-              -F "descriptor_file=@$descriptor_file" \
-              -F "public_repo=https://github.com/${{ github.repository }}"
-          )
-          success=$?
-          echo "::debug::$res"
-          if [ "$success" = "0" ]; then
-            href="$(jq -r '.collection.items[0].href' <<< "$res")"
-            echo $href
-            echo "::set-output name=pluginurl::$href"
-          else
-            echo "::error ::Failed upload to ChRIS Store"
-            echo "$res"
-            exit $success
-          fi
-
+        uses: FNNDSC/chrisstore-action@master
+        with:
+          descriptor_file: /tmp/description.json
+          auth: ${{ secrets.CHRIS_STORE_USER }}
