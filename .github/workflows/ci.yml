@@ -34,6 +34,12 @@ jobs:
           repo="${GITHUB_REPOSITORY,,}"  # to lower case
           # if build triggered by tag, use tag name
           tag="${git_tag:-latest}"
+
+          # if tag is a version number prefixed by 'v', remove the 'v'
+          if [[ "$tag" =~ ^v[0-9].* ]]; then
+            tag="${tag:1}"
+          fi
+
           dock_image=$repo:$tag
           echo $dock_image
           echo "::set-output name=dock_image::$dock_image"
