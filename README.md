@@ -13,7 +13,7 @@ itself is saved to `{N}.nii2mnc.log`.
 ## Usage
 
 ```shell
-singularity exec docker://fnndsc/pl-pl-nii2mnc-u8 nii2mnc_wrapper [-p PATTERN] input/ output/
+singularity exec docker://fnndsc/pl-nii2mnc-u8 nii2mnc_wrapper [-p PATTERN] input/ output/
 ```
 
 ## Examples
@@ -21,7 +21,7 @@ singularity exec docker://fnndsc/pl-pl-nii2mnc-u8 nii2mnc_wrapper [-p PATTERN] i
 ```shell
 mkdir input output
 mv mydata/*.nii input/
-singularity exec docker://fnndsc/pl-pl-nii2mnc-u8 nii2mnc_wrapper -p '*.nii' input/ output/
+singularity exec docker://fnndsc/pl-nii2mnc-u8 nii2mnc_wrapper -p '*.nii' input/ output/
 ```
 
 ### Development
@@ -29,13 +29,13 @@ singularity exec docker://fnndsc/pl-pl-nii2mnc-u8 nii2mnc_wrapper -p '*.nii' inp
 #### Building
 
 ```shell
-docker build -t localhost/fnndsc/pl-pl-nii2mnc-u8 .
+docker build -t localhost/fnndsc/pl-nii2mnc-u8 .
 ```
 
 #### Get JSON Representation
 
 ```shell
-docker run --rm localhost/fnndsc/pl-pl-nii2mnc-u8 chris_plugin_info > Nii2mncU8.json
+docker run --rm localhost/fnndsc/pl-nii2mnc-u8 chris_plugin_info > Nii2mncU8.json
 ```
 
 #### Local Test Run
@@ -44,5 +44,5 @@ docker run --rm localhost/fnndsc/pl-pl-nii2mnc-u8 chris_plugin_info > Nii2mncU8.
 docker run --rm -it --userns=host -u $(id -u):$(id -g) \
     -v $PWD/nii2mnc_wrapper.py:/opt/conda/lib/python3.10/site-packages/nii2mnc_wrapper.py:ro \
     -v $PWD/in:/incoming:ro -v $PWD/out:/outgoing:rw -w /outgoing \
-    localhost/fnndsc/pl-pl-nii2mnc-u8 nii2mnc_wrapper /incoming /outgoing
+    localhost/fnndsc/pl-nii2mnc-u8 nii2mnc_wrapper /incoming /outgoing
 ```
