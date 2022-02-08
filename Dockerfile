@@ -10,6 +10,6 @@ COPY requirements.txt .
 RUN pip install -r requirements.txt
 
 COPY . .
-RUN pip install --use-feature=in-tree-build .
+RUN pip install .
 
 CMD ["nii2mnc_wrapper", "--help"]
