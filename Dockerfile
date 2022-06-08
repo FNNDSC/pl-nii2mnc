@@ -1,4 +1,4 @@
-FROM docker.io/fnndsc/mni-conda-base:civet2.1.1-python3.10.2
+FROM docker.io/fnndsc/mni-conda-base:civet2.1.1-python3.10.4
 
 LABEL org.opencontainers.image.authors="FNNDSC <dev@babyMRI.org>" \
       org.opencontainers.image.title="pl-nii2mnc-u8" \
