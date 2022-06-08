@@ -32,9 +32,12 @@ def nii2mnc(nii: Path, mnc: Path):
 )
 def main(options: Namespace, inputdir: Path, outputdir: Path):
     with ThreadPoolExecutor(max_workers=len(os.sched_getaffinity(0))) as pool:
-        mapper = PathMapper(inputdir, outputdir, glob=options.pattern, suffix='.mnc')
-        for nii, mnc in mapper:
-            pool.submit(nii2mnc, nii, mnc)
+        mapper = PathMapper.file_mapper(inputdir, outputdir, glob=options.pattern, suffix='.mnc')
+        results = pool.map(lambda t: nii2mnc(*t), mapper)
+
+    # raise any Exceptions
+    for _ in results:
+        pass
 
 
 if __name__ == '__main__':

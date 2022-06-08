@@ -2,7 +2,7 @@ from setuptools import setup
 
 setup(
     name='nii2mnc_u8',
-    version='1.0.0',
+    version='1.0.1',
     description='A ChRIS ds plugin wrapper for nii2mnc -unsigned -byte',
     author='Jennings Zhang',
     author_email='dev@babyMRI.org',
