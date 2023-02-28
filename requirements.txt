@@ -1,2 +1,2 @@
-chris_plugin==0.0.17
+chris_plugin==0.2.0a1
 loguru~=0.6.0

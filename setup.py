@@ -1,19 +1,24 @@
 from setuptools import setup
 
 setup(
-    name='nii2mnc_u8',
-    version='1.0.1',
-    description='A ChRIS ds plugin wrapper for nii2mnc -unsigned -byte',
+    name='niis2mncs',
+    version='1.0.0',
+    description='A ChRIS ds plugin wrapper for nii2mnc',
     author='Jennings Zhang',
-    author_email='dev@babyMRI.org',
-    url='https://github.com/FNNDSC/pl-nii2mnc-u8',
-    py_modules=['nii2mnc_wrapper'],
+    author_email='Jennings.Zhang@childrens.harvard.edu',
+    url='https://github.com/FNNDSC/pl-nii2mnc',
+    py_modules=['niis2mncs'],
     install_requires=['chris_plugin', 'loguru'],
     license='MIT',
-    python_requires='>=3.10.2',
     entry_points={
         'console_scripts': [
-            'nii2mnc_wrapper = nii2mnc_wrapper:main'
+            'niis2mncs = niis2mncs:main'
+        ]
+    },
+    extras_require={
+        'none': [],
+        'dev': [
+            'pytest~=7.1'
         ]
     },
     classifiers=[

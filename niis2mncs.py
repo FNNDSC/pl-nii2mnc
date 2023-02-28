@@ -9,7 +9,7 @@ from concurrent.futures import ThreadPoolExecutor
 from loguru import logger
 
 
-parser = ArgumentParser(description='ChRIS ds plugin wrapper around nii2mnc -unsigned -byte')
+parser = ArgumentParser(description='ChRIS ds plugin wrapper around nii2mnc')
 parser.add_argument('-p', '--pattern', default='**/*.nii',
                     help='pattern for file names to include')
 
