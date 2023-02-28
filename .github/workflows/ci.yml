@@ -84,10 +84,31 @@ jobs:
             ${{ steps.determine.outputs.dock_image }}
             localhost:5000/${{ steps.determine.outputs.dock_image }}
             ghcr.io/${{ steps.determine.outputs.dock_image }}
-          platforms: linux/amd64,linux/ppc64le
+          platforms: linux/amd64,linux/arm64,linux/ppc64le
           push: true
           cache-from: type=local,src=/tmp/.buildx-cache
           cache-to: type=local,dest=/tmp/.buildx-cache
+
+      - name: Run examples
+        run: |
+          dock_image=${{ steps.determine.outputs.dock_image }}
+          output_dir=$(mktemp -d)
+          docker run --rm -u "$(id -u):$(id -g)" \
+            -v "$PWD/examples/incoming:/incoming:ro" \
+            -v "$output_dir:/outgoing:rw" \
+            localhost:5000/$dock_image niis2mncs /incoming /outgoing
+          
+          for expected_file in $(find examples/outgoing -type f); do
+            fname="${expected_file##*/}"
+            out_path="$output_dir/$fname"
+            printf "Checking output %s exists..." "$out_path"
+            if [ -f "$out_path" ]; then
+              echo "ok"
+            else
+              echo "not found"
+              exit 1
+            fi
+          done
 
       - name: Get plugin meta
         id: pluginmeta
