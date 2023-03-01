@@ -88,7 +88,7 @@ def name_mapper(file: Path, outputdir: Path):
 # documentation: https://fnndsc.github.io/chris_plugin/
 @chris_plugin(
     parser=parser,
-    title='nii2mnc (unsigned byte)',
+    title='nii2mnc',
     category='MRI Processing',
     min_memory_limit='500Mi',
     min_cpu_limit='1000m'

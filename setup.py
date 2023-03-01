@@ -3,7 +3,7 @@ from setuptools import setup
 setup(
     name='niis2mncs',
     version='1.0.0',
-    description='A ChRIS ds plugin wrapper for nii2mnc',
+    description='A ChRIS ds plugin wrapper for nii2mnc, which converts NIFTI (.nii, .nii.gz) to MINC (.mnc)',
     author='Jennings Zhang',
     author_email='Jennings.Zhang@childrens.harvard.edu',
     url='https://github.com/FNNDSC/pl-nii2mnc',
