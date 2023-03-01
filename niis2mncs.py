@@ -79,6 +79,12 @@ def temp_file(suffix: str) -> str:
         return temp.name
 
 
+def name_mapper(file: Path, outputdir: Path):
+    if file.suffix == '.gz':
+        return name_mapper(file.with_suffix(''), outputdir)
+    return outputdir / file.with_suffix('.mnc')
+
+
 # documentation: https://fnndsc.github.io/chris_plugin/
 @chris_plugin(
     parser=parser,
@@ -93,7 +99,7 @@ def main(options: Namespace, inputdir: Path, outputdir: Path):
         flags.append('-unsigned')
     if options.byte:
         flags.append('-byte')
-    mapper = PathMapper.file_mapper(inputdir, outputdir, glob=options.pattern.split(','), suffix='.mnc')
+    mapper = PathMapper.file_mapper(inputdir, outputdir, glob=options.pattern.split(','), name_mapper=name_mapper)
 
     with ThreadPoolExecutor(max_workers=len(os.sched_getaffinity(0))) as pool:
         results = pool.map(lambda t, f: niigz2mnc(*t, f), mapper, itertools.repeat(flags))

@@ -1,0 +1,37 @@
+<nifti_image
+  nifti_type = 'NIFTI-1+'
+  header_filename = '/tmp/tmpbz2a5yzr.nii'
+  image_filename = '/tmp/tmpbz2a5yzr.nii'
+  image_offset = '352'
+  ndim = '3'
+  nx = '40'
+  ny = '40'
+  nz = '40'
+  dx = '0.859375'
+  dy = '0.859375'
+  dz = '0.859375'
+  datatype = '64'
+  datatype_name = 'FLOAT64'
+  nvox = '64000'
+  nbyper = '8'
+  byteorder = 'LSB_FIRST'
+  scl_slope = '1'
+  scl_inter = '0'
+  sform_code = '2'
+  sform_code_name = 'Aligned Anat'
+  sto_xyz_matrix = '0.859375 0 0 -20 0 0.859375 0 -20 0 0 0.859375 -20 0 0 0 1'
+  sto_ijk matrix = '1.16364 0 0 23.2727 0 1.16364 0 23.2727 0 0 1.16364 23.2727 0 0 0 1'
+  sform_i_orientation = 'Left-to-Right'
+  sform_j_orientation = 'Posterior-to-Anterior'
+  sform_k_orientation = 'Inferior-to-Superior'
+  num_ext = '0'
+/>
+Unknown XYZ units 0
+Using s-form transform:
+  0.8594,   0.0000,   0.0000, -20.0000, 
+  0.0000,   0.8594,   0.0000, -20.0000, 
+  0.0000,   0.0000,   0.8594, -20.0000, 
+  0.0000,   0.0000,   0.0000,   1.0000, 
+xspace start: -20.0000 step:   0.8594 cosines:   1.0000   0.0000   0.0000 flip: 0
+yspace start: -20.0000 step:   0.8594 cosines:   0.0000   1.0000   0.0000 flip: 0
+zspace start: -20.0000 step:   0.8594 cosines:   0.0000   0.0000   1.0000 flip: 0
