@@ -24,31 +24,51 @@ parser.add_argument('-b', '--byte', action='store_true',
                     help='Write voxel data in 8-bit integer format.')
 
 
-def niigz2mnc(niigz: Path, mnc: Path, flags: list[str]) -> tuple[str, Optional[Path], int]:
-    if niigz.suffix != '.gz':
-        return nii2mnc(niigz, mnc, flags)
+def niigz2mnc(niigz: Path, mnc: Path, flags: list[str], log_prefix='') -> tuple[str, Optional[Path], int]:
+    """
+    If input file is ``.gz`` compressed, copy it to a temporary location and run ``gzip -d``
+    before calling `nii2mnc`. Descriptions of these actions are added to the accumulator ``log_prefix``.
+    """
 
+    if niigz.suffix != '.gz':
+        return nii2mnc(niigz, mnc, flags, log_prefix)
+
+    # copy NIFTI to temporary location
     temp_niigz = temp_file('.nii.gz')
     shutil.copy(niigz, temp_niigz)
+
+    # decompress NIFTI
     cmd = ['gzip', '-d', temp_niigz]
+    cmd_str = shlex.join(cmd)
     p = sp.run(cmd)
     if p.returncode != 0:
         return shlex.join(cmd), None, p.returncode
+
+    # check decompressed NIFTI exists
     created_nii = Path(temp_niigz[:-len('.gz')])
     if not created_nii.is_file():
         log_file = mnc.with_suffix('.gzip.log')
         log_file.write_text(f'expected {created_nii} to be created, but it was not')
-        return shlex.join(cmd), log_file, 0
-    ret = niigz2mnc(created_nii, mnc, flags)
+        return cmd_str, log_file, 0
+
+    logs_so_far = [
+        shlex.join(['cp', str(niigz), temp_niigz]),
+        cmd_str,
+        ''
+    ]
+    # call nii2mnc by calling niigz2mnc recursively
+    ret = niigz2mnc(created_nii, mnc, flags, log_prefix=' && '.join(logs_so_far))
+
+    # clean up intermediary decompressed NIFTI
     created_nii.unlink()
     return ret
 
 
-def nii2mnc(nii: Path, mnc: Path, flags: list[str]) -> tuple[str, Path, int]:
+def nii2mnc(nii: Path, mnc: Path, flags: list[str], log_prefix='') -> tuple[str, Path, int]:
     log_file = mnc.with_suffix('.nii2mnc.log')
     cmd = ['nii2mnc', *flags, str(nii), str(mnc)]
     cmd_str = shlex.join(cmd)
-    logger.info(cmd_str)
+    logger.info('{}{}', log_prefix, cmd_str)
     with log_file.open('wb') as out:
         p = sp.run(cmd, stdout=out, stderr=out)
     return cmd_str, log_file, p.returncode

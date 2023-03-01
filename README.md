@@ -16,13 +16,15 @@ command itself is saved to `{N}.nii2mnc.log`.
 ## Usage
 
 ```shell
-apptainer exec docker://fnndsc/pl-nii2mnc niis2mncs [-p PATTERN] input/ output/
+apptainer exec docker://fnndsc/pl-nii2mnc niis2mncs [--unsigned] [--byte] input/ output/
 ```
+
+`input/` should be a directory of `.nii` (NIFTI) or `.nii.gz` (compressed NIFTI) files.
 
 ## Examples
 
 ```shell
 mkdir input output
-mv mydata/*.nii input/
-apptainer exec docker://fnndsc/pl-nii2mnc niis2mncs -p '*.nii' input/ output/
+cp examples/incoming/* input/
+apptainer exec docker://fnndsc/pl-nii2mnc niis2mncs --unsigned --byte input/ output/
 ```
