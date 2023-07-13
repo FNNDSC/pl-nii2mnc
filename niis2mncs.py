@@ -22,6 +22,8 @@ parser.add_argument('-u', '--unsigned', action='store_true',
                     help='Write integer voxel data in unsigned format.')
 parser.add_argument('-b', '--byte', action='store_true',
                     help='Write voxel data in 8-bit integer format.')
+parser.add_argument('-r', '--rename',
+                    help='Rename output files.')
 
 
 def niigz2mnc(niigz: Path, mnc: Path, flags: list[str], log_prefix='') -> tuple[str, Optional[Path], int]:
@@ -79,10 +81,19 @@ def temp_file(suffix: str) -> str:
         return temp.name
 
 
-def name_mapper(file: Path, outputdir: Path):
+def name_mapper(file: Path, outputdir: Path, rename: Optional[str]):
     if file.suffix == '.gz':
-        return name_mapper(file.with_suffix(''), outputdir)
-    return outputdir / file.with_suffix('.mnc')
+        return name_mapper(file.with_suffix(''), outputdir, rename)
+
+    output_path = outputdir / file.with_suffix('.mnc')
+    if rename is None:
+        return output_path
+    name = rename.replace('{}', output_path.name)
+    return output_path.with_name(name)
+
+
+def __curry_name_mapper(rename: Optional[str]):
+    return lambda f, o: name_mapper(f, o, rename)
 
 
 # documentation: https://fnndsc.github.io/chris_plugin/
@@ -99,7 +110,8 @@ def main(options: Namespace, inputdir: Path, outputdir: Path):
         flags.append('-unsigned')
     if options.byte:
         flags.append('-byte')
-    mapper = PathMapper.file_mapper(inputdir, outputdir, glob=options.pattern.split(','), name_mapper=name_mapper)
+    name_mapper_func = __curry_name_mapper(options.rename)
+    mapper = PathMapper.file_mapper(inputdir, outputdir, glob=options.pattern.split(','), name_mapper=name_mapper_func)
 
     with ThreadPoolExecutor(max_workers=len(os.sched_getaffinity(0))) as pool:
         results = pool.map(lambda t, f: niigz2mnc(*t, f), mapper, itertools.repeat(flags))
